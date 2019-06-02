@@ -57,9 +57,54 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    ; (function () {
 
-</script>
+      function playMusic(e) {
+        // 播放聲音
+        const audio = document.querySelector(`audio[data-key='${e.keyCode}']`);
+
+        if (audio !== null) {
+          audio.currentTime = 0;
+          audio.play();
+        }
+
+        // 控制樣式
+        const dom = document.querySelector(`.key[data-key='${e.keyCode}']`);
+
+        if (dom !== null) {
+          dom.classList.add('playing');
+        }
+      }
+
+      function removeClass(e) {
+
+        /*
+         * 先選出 transitionend 回來的屬性是 transform 的物件
+         * 再利用 currentTarget 去移除 class
+         */
+
+        if (e.propertyName === 'transform') {
+          e.currentTarget.classList.remove('playing');
+        }
+      }
+
+      window.addEventListener('keydown', playMusic);
+
+      /*
+       * document.querySelectorAll 抓回來會是 NodeList
+       * 他跟陣列很像，但其實並不是陣列
+       *
+       * - document.getElement 選取器是動態選取，dom改變時會重新抓取
+       * - document.querySelector 選取器是靜態選取，dom改變時不會重新抓取，要自己主動去抓
+       */
+
+      document.querySelectorAll('.key').forEach(function (key) {
+        key.addEventListener('transitionend', removeClass);
+      });
+
+    })();
+  </script>
 
 
 </body>
