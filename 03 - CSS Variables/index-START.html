@@ -26,6 +26,29 @@
       misc styles, nothing to do with CSS variables
     */
 
+    /*
+     * CSS3 變數 :root 選取器等同於 html
+     * document.querySelector(':root') === 
+     * document.querySelector('html') === 
+     * document.documentElement // true
+     */
+
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
     body {
       text-align: center;
       background: #193549;
@@ -45,6 +68,25 @@
   </style>
 
   <script>
+    ; (function () {
+        const input = document.querySelectorAll('.controls input');
+
+        function changeWindow() {
+          let unit = this.dataset.sizing;
+
+          if (!unit) {
+            unit = '';
+          }
+
+          document.documentElement.style.setProperty(`--${this.name}`, `${this.value}${unit}`);
+        }
+
+        input.forEach(function (input) {
+          input.addEventListener('change', changeWindow);
+          input.addEventListener('mousemove', changeWindow);
+        });
+
+      })();
   </script>
 
 </body>
