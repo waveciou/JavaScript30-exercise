@@ -24,7 +24,7 @@
       text-align: center;
       font-size: 10px;
     }
-
+  
     body {
       margin: 0;
       font-size: 2rem;
@@ -33,42 +33,117 @@
       min-height: 100vh;
       align-items: center;
     }
-
+  
     .clock {
       width: 30rem;
       height: 30rem;
       border: 20px solid white;
       border-radius: 50%;
+      background-color: whitesmoke;
       margin: 50px auto;
       position: relative;
       padding: 2rem;
       box-shadow:
-        0 0 0 4px rgba(0,0,0,0.1),
+        0 0 0 4px rgba(0, 0, 0, 0.1),
         inset 0 0 0 3px #EFEFEF,
         inset 0 0 10px black,
-        0 0 10px rgba(0,0,0,0.2);
+        0 0 10px rgba(0, 0, 0, 0.2);
     }
-
+  
     .clock-face {
       position: relative;
       width: 100%;
       height: 100%;
-      transform: translateY(-3px); /* account for the height of the clock hands */
+      transform: translateY(-3px);
+      /* account for the height of the clock hands */
     }
 
-    .hand {
-      width: 50%;
-      height: 6px;
-      background: black;
+    .clock-face::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      display: block;
+      border-radius: 100%;
+      background-color: black;
       position: absolute;
       top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-
+  
+    .hand {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+    }
+  
+    .hand::after {
+      content: '';
+      width: 7px;
+      display: block;
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform: translate(-50%, 0%);
+      background-color: #000;
+    }
+  
+    .second-hand::after {
+      height: 40%;
+    }
+  
+    .min-hand::after {
+      height: 35%;
+    }
+  
+    .hour-hand::after {
+      height: 25%;
+    }
   </style>
 
   <script>
+    ; (function () {
 
+        const secondHand = document.querySelector('.second-hand');
+        const minsHand = document.querySelector('.min-hand');
+        const hourHand = document.querySelector('.hour-hand');
 
+        function setClock() {
+          let date = new Date();
+
+          // 秒：(360度 / 60秒)
+          let secondDeg = date.getSeconds() * (360 / 60);
+
+          // 分：(360度 / 60分鐘) + (秒數 * 6度 / 60秒)
+          let minsDeg = date.getMinutes() * (360 / 60) + date.getSeconds() * 6 / 60;
+
+          // 時：(360度 / 12小時) + (分鐘數 * 30度 / 60分鐘)
+          let hourDeg = date.getHours() * (360 / 12) + date.getMinutes() * 30 / 60;
+
+          secondHand.style.transform = `rotate(${secondDeg}deg)`;
+          minsHand.style.transform = `rotate(${minsDeg}deg)`;
+          hourHand.style.transform = `rotate(${hourDeg}deg)`;
+        }
+
+        setClock();
+
+        setInterval(setClock, 1000);
+
+        /*
+         * 三種處理時間的功能：
+         * - setInterval（設定間隔 持續執行）
+         * - setTimeout（設定延遲 執行一次）
+         * - request​Animation​Frame（根據硬體效能處理畫面更新的 setTimeout）
+         */
+
+        // function setAnimationClock(){
+        //   setClock();
+        //   window.requestAnimationFrame(setAnimationClock);
+        // }
+
+        // window.requestAnimationFrame(setAnimationClock);
+
+      })()
   </script>
 </body>
 </html>
