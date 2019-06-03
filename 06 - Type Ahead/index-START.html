@@ -15,8 +15,82 @@
     </ul>
   </form>
 <script>
-const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+  ; (function () {
+      const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
 
+      const suggestions = document.querySelector('.suggestions');
+      const search = document.querySelector('.search')
+
+      /*
+       * - 原生的 API 存取方式（XMLHttpRequest）
+       * - Callback
+       */
+
+      // let req = new XMLHttpRequest();
+
+      // req.addEventListener('load', function(){
+      //   console.log(JSON.parse(this.response));
+      // });
+
+      // req.open('get', endpoint);
+      // req.send();
+
+      /*
+       * - 原生的 API 存取方式（fetch）
+       * - Promise
+       */
+
+      // fetch(endpoint).then(blob => blob.json()).then(data => console.log(data));
+
+      const cities = [];
+      fetch(endpoint)
+        .then(blob => blob.json())
+        .then(data => cities.push(...data));
+
+      // ...data 陣列解構
+
+      // Pure Function 裡面所做的事情不會改到外面的東西
+      // 只是把傳進來的東西做處理，並回傳出新東西
+      function findMatches(wordToMatch, cities) {
+        return cities.filter(place => {
+          const regex = new RegExp(wordToMatch, 'gi');
+          return place.city.match(regex) || place.state.match(regex)
+        });
+      }
+
+      function numberWithCommas(x) {
+        // return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        // 把數字加上進位的逗點
+        return (x * 1).toLocaleString();
+      }
+
+      function displayMatches() {
+        const matchArray = findMatches(this.value, cities);
+
+        const html = matchArray.map(place => {
+          const regex = new RegExp(this.value, 'gi');
+
+          // 把篩選出的資料內容替換成 html 標籤字串
+          const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+          const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+
+          // 在 return 出一組資料
+          return `
+            <li>
+              <span class="name">${cityName}, ${stateName}</span>
+              <span class="population">${numberWithCommas(place.population)}</span>
+            </li>
+          `;
+        }).join('');
+
+        // join() 可以把陣列項目銜接部分加上東西變字串
+
+        suggestions.innerHTML = html;
+      }
+
+      search.addEventListener('keyup', displayMatches);
+
+    })();
 </script>
 </body>
 </html>
