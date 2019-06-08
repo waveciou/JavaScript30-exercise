@@ -17,29 +17,116 @@
       p.style.fontSize = '50px';
     }
 
+    /* 設計一個物件管理程式的 console */
+    let console = {
+      isDev: true,
+      log(...arg) {
+        if(!this.isDev) return;
+        window.console.log(...arg);
+      },
+      warn(...arg) {
+        if(!this.isDev) return;
+        window.console.warn(...arg);
+      },
+      error(...arg) {
+        if(!this.isDev) return;
+        window.console.error(...arg);
+      },
+      info(...arg) {
+        if(!this.isDev) return;
+        window.console.info(...arg);
+      },
+      assert(...arg) {
+        if(!this.isDev) return;
+        window.console.assert(...arg);
+      },
+      dir(...arg) {
+        if(!this.isDev) return;
+        window.console.dir(...arg);
+      },
+      table(...arg) {
+        if(!this.isDev) return;
+        window.console.table(...arg);
+      },
+      count(...arg) {
+        if(!this.isDev) return;
+        window.console.count(...arg);
+      },
+      time(...arg) {
+        if(!this.isDev) return;
+        window.console.time(...arg);
+      },
+      timeEnd(...arg) {
+        if(!this.isDev) return;
+        window.console.timeEnd(...arg);
+      }
+    }
+
     // Regular
+    console.log('hello')
 
     // Interpolated
+    console.log('hello', 'Interpolated')
+    console.log('hello %s', '3.14')
+    console.log('hello %f', 3.14);
+    console.log('hello %d', 3.14);
 
     // Styled
+    console.log('%c hello', 'font-size:50px; background:#000; color:#FFF;')
 
     // warning!
+    console.warn('安安')
 
     // Error :|
+    console.error('安安')
 
     // Info
+    console.info('安安')
 
     // Testing
+    /* assert 相當於有條件的 console error */
+    console.assert(false, 'assert')
+    console.assert('', 'assert')
+    console.assert(0, 'assert')
+    console.assert(NaN, 'assert')
+    console.assert(null, 'assert')
+    console.assert(undefined, 'assert')
 
     // clearing
 
     // Viewing DOM Elements
+    let p = document.querySelector('p');
+    console.log(p)
+
+    /* console.dir 可以展開 DOM 物件的屬性 */
+    console.dir(p)
+    window.console.dir(console);
 
     // Grouping together
+    console.table(dogs)
+    console.table(dogs, [name])
 
     // counting
 
+    /* console.count 可以記錄有幾次 */
+    console.count('Wes');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Wes');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+    console.count('Steve');
+
     // timing
+
+    /* console.time 可以記錄一段程式執行的時間 */
+    console.time('計時');
+    console.timeEnd('計時');
 
   </script>
 </body>
