@@ -7,11 +7,87 @@
 <body>
 <canvas id="draw" width="800" height="800"></canvas>
 <script>
+  ; (function () {
+      let canvas = document.querySelector('#draw');
+
+      // 設定 canvas 上面所畫的東西
+      let ctx = canvas.getContext('2d');
+      let colorDeg = 0; // 顏色（色環角度）
+      let lineWidth = 50; // 線條粗細
+      let direction = -1; // 控制線條粗細數值遞減或遞增
+
+      ctx.strokeStyle = `hsl(${colorDeg},100%,50%)`; // 筆觸顏色
+      ctx.lineWidth = lineWidth; // 線條粗細
+      ctx.lineCap = 'round'; // 線條邊角
+      ctx.lineJoin = 'round' // 線條轉折角
+
+      // 判斷是否正在畫圖
+      let isDrawing = false;
+
+      // 筆觸座標
+      let x = 0, y = 0;
+
+      /* 在 canvas 上處理的事件 */
+      canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true;
+
+        // 取得按下去的座標點
+        [x, y] = [e.offsetX, e.offsetY];
+
+        // console.log(`mousedown:${x},${y}`)
+      });
+
+      canvas.addEventListener('mousemove', (e) => {
+        if(isDrawing === false) {
+          return false;
+        } else {
+          ctx.beginPath(); // 開始渲染 canvas
+
+          // 更新顏色
+          if(colorDeg > 360) {
+            colorDeg = 0;
+          } else {
+            colorDeg = colorDeg + 1;
+          }
+          ctx.strokeStyle = `hsl(${colorDeg},100%,50%)`;
+
+          // 更新線條粗細
+          // 當線條 <1 或是 >50 的時候，把方向切換
+          if(lineWidth < 1 || lineWidth > 50) {
+            direction *= -1;
+          }
+          lineWidth += direction;
+          ctx.lineWidth = lineWidth;
+
+          ctx.moveTo(x, y); // 把 ctx 移動到座標點
+          ctx.lineTo(e.offsetX, e.offsetY); // 把 ctx 連到你現在的座標
+          [x, y] = [e.offsetX, e.offsetY]; // 更新座標點
+          ctx.stroke(); // 畫圖
+        }
+        console.log('mousemove')
+      });
+
+      canvas.addEventListener('mouseup', () => {
+        isDrawing = false;
+        console.log('mouseup')
+      });
+
+      // mouseout 和 mouseleave 基本上是一樣，但是 mouseout 會連續觸發，所以建議使用 mousemove
+      // canvas.addEventListener('mouseout', ()=>{console.log('mouseout')});
+
+      canvas.addEventListener('mouseleave', () => {
+        isDrawing = false;
+        console.log('mouseleave')
+      });
+    })()
 </script>
 
 <style>
   html, body {
     margin: 0;
+  }
+  canvas {
+    border: 1px #000 solid;
   }
 </style>
 
