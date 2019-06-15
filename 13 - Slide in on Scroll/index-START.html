@@ -43,21 +43,43 @@
   </div>
 
   <script>
-    function debounce(func, wait = 20, immediate = true) {
-      var timeout;
-      return function() {
-        var context = this, args = arguments;
-        var later = function() {
-          timeout = null;
-          if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-      };
-    }
+    ; (function () {
+        function debounce(func, wait = 20, immediate = true) {
+          var timeout;
+          return function () {
+            var context = this, args = arguments;
+            var later = function () {
+              timeout = null;
+              if (!immediate) func.apply(context, args);
+            };
+            var callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+          };
+        }
 
+        const slideImg = document.querySelectorAll('.slide-in');
+        let scrollValue = window.scrollY;
+
+        function checkSlide() {
+          scrollValue = window.scrollY;
+          slideImg.forEach((item) => {
+            let top = item.offsetTop;
+            let bottom = item.offsetTop + item.height;
+            let checkValue = (scrollValue + window.innerHeight) - (item.height / 2);
+            if(checkValue > top && scrollValue < bottom) {
+              item.classList.add('active');
+            } else {
+              item.classList.remove('active');
+            }
+          });
+        }
+
+        checkSlide()
+
+        window.addEventListener('scroll', debounce(checkSlide));
+      })();
   </script>
 
   <style>
