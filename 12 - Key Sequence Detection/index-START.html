@@ -7,6 +7,40 @@
 </head>
 <body>
 <script>
+    ; (function () {
+        const pressed = [];
+        const secretCode = 'waveciou';
+
+        /*
+         * splice 可以用來刪除或是替換陣列裡面的東西
+         *（他是直接修改原陣列，不是產生新陣列）
+         */
+
+        /*
+         * join 可以把陣列的內容連起來變成字串
+         */
+
+        /*
+         * includes 可以比對陣列或字串內有沒有符合的項目
+         */
+
+        window.addEventListener('keyup', (e) => {
+          console.log(e.key);
+          pressed.push(e.key);
+          if (pressed.length > secretCode.length) {
+            let differ = pressed.length - secretCode.length;
+            pressed.splice(differ - 1, differ);
+          }
+          console.log(pressed);
+
+          if (pressed.length === secretCode.length) {
+            if (pressed.join('').includes(secretCode)) {
+              console.log('答對了');
+            }
+          }
+        });
+
+      })();
 </script>
 </body>
 </html>
