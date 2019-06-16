@@ -35,6 +35,42 @@
   </style>
 
 <script>
+  ; (function () {
+      const hero = document.querySelector('.hero');
+      const title = hero.querySelector('h1');
+      const walk = 500; // 參數
+
+      function smartmove(e) {
+        // 背板的佈局寬度與高度
+        let width = hero.offsetWidth;
+        let height = hero.offsetHeight;
+
+        // 相對於觸發到的 DOM 的距離
+        let w = e.offsetX;
+        let h = e.offsetY;
+
+        // 如果 this（背板）跟觸發到的東西不一樣
+        // 也就是觸發到 title 的話
+        // 就把距離的數值加上 title 的相對距離
+        if (this !== e.target) {
+          w = w + e.target.offsetLeft;
+          h = h + e.target.offsetTop;
+        }
+
+        const xWalk = Math.round((w / width * walk) - (walk / 2));
+        const yWalk = Math.round((h / height * walk) - (walk / 2));
+
+        title.style.textShadow = `
+          ${xWalk}px ${yWalk}px 0 rgba(255,0,255,0.7),
+          ${xWalk * -1}px ${yWalk}px 0 rgba(0,255,255,0.7),
+          ${yWalk}px ${xWalk * -1}px 0 rgba(0,255,0,0.7),
+          ${yWalk * -1}px ${xWalk}px 0 rgba(0,0,255,0.7)
+        `;
+      }
+
+      hero.addEventListener('mousemove', smartmove);
+
+    })();
 </script>
 </body>
 </html>
