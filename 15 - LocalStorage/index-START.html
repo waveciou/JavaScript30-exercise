@@ -20,16 +20,104 @@
       <li>Loading Tapas...</li>
     </ul>
     <form class="add-items">
+      <!-- input 標籤的 required 屬性 -->
+      <!-- 規定表單提交時一定要填入內容 -->
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
   </div>
 
 <script>
-  const addItems = document.querySelector('.add-items');
-  const itemsList = document.querySelector('.plates');
-  const items = [];
+  ; (function () {
+      const addItems = document.querySelector('.add-items');
+      const itemsList = document.querySelector('.plates');
 
+      /* 項目的陣列 */
+      const items = JSON.parse(localStorage.getItem('items')) || [];
+
+      /* 顯示項目 */
+      function populateList(plates) {
+
+        // 如果找不到項目，就給他空陣列
+        if (plates === undefined) {
+          plates = [];
+        }
+
+        // 把每個項目遍歷調整出來
+        let platesArray = plates.map((item, index) => {
+          let check = '';
+          if (item.done === true) {
+            check = `checked`;
+          }
+          return `
+            <li>
+              <input type="checkbox" data-index=${index} id="item${index}" ${check} />
+              <label for="item${index}">${item.text}</label>
+            </li>
+          `;
+        });
+
+        // 渲染到畫面上
+        itemsList.innerHTML = platesArray.join('');
+      }
+
+      /* 添加項目 */
+      function addItem(e) {
+        // 取消 Form Submit 原有的功能
+        e.preventDefault();
+
+        // 取得 Form 標籤底下輸入欄的值
+        let text = (this.querySelector('[name=item]')).value;
+
+        let item = {
+          text,
+          done: false
+        };
+
+        // 把項目加到陣列
+        items.push(item);
+
+        // 顯示項目
+        populateList(items);
+
+        // 把項目加到 localStorage
+        localStorage.setItem('items', JSON.stringify(items));
+
+        // 重置 From 表單
+        this.reset();
+      }
+
+      /* Form 標籤的 submit 事件（表單送出）*/
+      addItems.addEventListener('submit', addItem);
+
+      /* toggle check 項目 */
+      itemsList.addEventListener('click', (e) => {
+
+        // * 利用事件委派的方式來做
+        // e.target 抓出來是字串
+        // 這邊用 matches 來判斷點擊的東西是不是 input
+
+        if (e.target.matches('input') === false) {
+          return false;
+        } else {
+          // 取得 dom
+          const el = e.target;
+          // 取得 dom 的 data 編號
+          const index = el.dataset.index;
+
+          // 反轉布林值（更改項目的資料）
+          items[index].done = !items[index].done;
+
+          // 把項目加到 localStorage
+          localStorage.setItem('items', JSON.stringify(items));
+
+          // 畫面重新在渲染一次
+          populateList(items);
+        }
+      });
+
+      populateList(items);
+    })();
 </script>
 
 
