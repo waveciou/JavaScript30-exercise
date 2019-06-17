@@ -46,9 +46,38 @@
   <ul id="bands"></ul>
 
 <script>
-const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+  ; (function () {
 
+      /* 去除冠詞的名稱排序 */
 
+      const bands = ['The Plot in You', 'The Devil Wears Prada', 'Pierce the Veil', 'Norma Jean', 'The Bled', 'Say Anything', 'The Midway State', 'We Came as Romans', 'Counterparts', 'Oh, Sleeper', 'A Skylit Drive', 'Anywhere But Here', 'An Old Dog'];
+
+      // 去除冠詞
+      function strip(bandName) {
+        return bandName.replace(/^(a |the |an )/i, '').trim();
+      }
+
+      // 1. 產生去除冠詞的新陣列
+      let stripArticle = bands.map((item) => {
+        return strip(item)
+      });
+
+      // 2. 陣列排序
+      let sortArray = stripArticle.sort((a, b) => {
+        return a > b ? 1 : -1;
+      });
+
+      // * 因為分開做冠詞會真的被拿掉
+      // * 所以要改成這樣做
+      let newArray = bands.sort((a, b) => {
+        return strip(a) > strip(b) ? 1 : -1;
+      });
+
+      document.querySelector('#bands').innerHTML = newArray.map((item) => {
+        return `<li>${item}</li>`
+      }).join('');
+
+    })();
 </script>
 
 </body>
