@@ -182,6 +182,39 @@
     </li>
   </ul>
 <script>
+  ; (function () {
+      const timeNode = Array.from(document.querySelectorAll('[data-time]'));
+
+      // 把 DATA 資料抓出來存進陣列
+      let dataArray = timeNode.map((item)=>{
+        return item.dataset.time
+      });
+
+      // 把資料處理成時間
+      let mapArray = dataArray.map((item)=>{
+        let min = parseFloat(item.split(':')[0]) * 60
+        let sec = parseFloat(item.split(':')[1])
+        return min + sec
+      });
+
+      // 把時間做加總
+      let time = mapArray.reduce((total, current)=>{
+        return total + current
+      });
+
+      // 把總時間處理成時分秒
+      let seconds = time;
+
+      let hour = Math.floor(seconds / 3600);
+      seconds = seconds % 3600;
+
+      let mins = Math.floor(seconds / 60);
+      seconds = seconds % 60;
+
+      let timeArray = [hour, mins, seconds];
+      console.log(timeArray);
+
+    })();
 </script>
 </body>
 </html>
