@@ -7,48 +7,120 @@
 <body>
 
   <script>
-    // start with strings, numbers and booleans
+    // * JavaScript 的型別分成基本型別和物件型別
 
-    // Let's say we have an array
+    // * 基本型別是以「純值」的形式存在，是不可變的，他們的拷貝被叫做「傳值」
+    //   也就是把一個變數的值傳到另一個變數裡，所以把 a 拷貝到 b 後，改變 b 時並不會影響到 a
+    //   （字串、數值、布林值、null、undefined）
+
+    // * 物件型別是由零或多種不同型別 (包括純值與物件) 所組合成的物件，他是可變的
+    //   物件型別的淺拷貝是屬於「傳址」，把 a 淺拷貝到 b 時，只是把 a 引用到 b 而已
+    //   當我們改變 b 時，a 也會一起做改變，要解決這個問題就要用深拷貝。
+    //   （陣列、物件）
+
+    let age = 100;
+    let age2 = age;
+    console.log(age, age2);
+    // age: 100 age2: 100
+    age = 200;
+    console.log(age, age2);
+    // age: 200 age2: 100
+
+    // 改變 age 時，age2 並不會一起改變
+    // Javascript 在變數建立時，age2 變數的值是指向 age，但建立 age2 變數，是指向新的位置。
+
+    /* 陣列 */
     const players = ['Wes', 'Sarah', 'Ryan', 'Poppy'];
 
-    // and we want to make a copy of it.
+    // 把 players 拷貝到 team
+    const team = players;
+    console.log(players, team);
 
-    // You might think we can just do something like this:
+    // 再去修改 team 會發現 players 和 team 會一起被修改。
+    // 這種複製的方式就叫做「淺拷貝」，淺拷貝出來的東西都只是 reference，他們是連動的
+    console.log('players:', players, 'team:', team);
+    team[3] = 'Lux';
+    console.log('players:', players, 'team:', team);
 
-    // however what happens when we update that array?
+    // 以下幾個方法是讓可以改變從原本陣列衍生出的變數陣列，卻不會變動到原本的的陣列。
+    // 也就是產生新陣列的意思，也叫做「深拷貝」
 
-    // now here is the problem!
+    // * Array.slice()
+    // slice 是用來擷取字串或陣列片段的，他會產生新陣列
 
-    // oh no - we have edited the original array too!
+    const team2 = players.slice();
+    console.log('players', players, 'team2', team2);
+    team2[3] = 'team2_test'
+    console.log('players', players, 'team2', team2);
 
-    // Why? It's because that is an array reference, not an array copy. They both point to the same array!
+    // * Array.concat()
+    // concat 是用來合併陣列片段的，他會產生新陣列
 
-    // So, how do we fix this? We take a copy instead!
+    const team3 = [].concat(players);
+    console.log('players', players, 'team3', team3);
+    team3[3] = 'team3＿test'
+    console.log('players', players, 'team3', team3);
 
-    // one way
+    // * Spread syntax（展開運算符）
+    // 展開運算符可以用來做陣列的深拷貝
 
-    // or create a new array and concat the old one in
+    const team4 = [...players];
+    console.log('players', players, 'team4', team4);
+    team4[3] = 'team4＿test';
+    console.log('players', players, 'team4', team4);
 
-    // or use the new ES6 Spread
+    // * Array.from()
+    // 使用 Array.from 可以把陣列轉成一個新陣列
 
-    // now when we update it, the original one isn't changed
+    const team5 = Array.from(players);
+    console.log('players', players, 'team5', team5);
+    team5[3] = 'team5＿test';
+    console.log('players', players, 'team5', team5);
 
-    // The same thing goes for objects, let's say we have a person object
-
-    // with Objects
+    /* 物件 */
     const person = {
       name: 'Wes Bos',
       age: 80
     };
 
-    // and think we make a copy:
+    // 物件的淺拷貝也是一樣
 
-    // how do we take a copy instead?
+    const captain = person;
+    console.log('person', person, 'captain', captain);
+    captain.number = 99;
+    console.log('person', person, 'captain', captain);
 
-    // We will hopefully soon see the object ...spread
+    // * Object.assign()
+    // Object.assign 可以複製一個或多個物件自身所有可數的屬性到另一個物件
 
-    // Things to note - this is only 1 level deep - both for Arrays and Objects. lodash has a cloneDeep method, but you should think twice before using it.
+    console.log('person', person);
+    const cap2 = Object.assign({}, person, { number: 99, age: 12 });
+    console.log('person', person, 'cap2', cap2);
+
+    // 在多階層的物件會發現只有第一層修改時，不會相互影響到，但在第二層發現會相互影響
+
+    let aaa = {
+      name: 'Wes Bos',
+      age: 80,
+      mm: {
+        ma: 10,
+        mb: 20
+      }
+    }
+
+    let bbb = Object.assign({}, aaa);
+    bbb.mm.mb = 50;
+    console.log(aaa, bbb);
+
+    // 我修改了 bbb 的 mm.mb，卻發現 aaa 的 mm.mb 也被修改了
+
+    // * JSON.parse() && JSON.stringify()
+    // 要解決這個問題可以使用轉 JSON 的方式來做
+    // 先用 JSON.parse() 轉成字串，再用 JSON.stringify() 轉回物件
+
+    const ccc = JSON.parse(JSON.stringify(aaa));
+    ccc.mm.mb = 99999;
+    console.log('aaa', aaa, 'ccc', ccc);
 
   </script>
 
