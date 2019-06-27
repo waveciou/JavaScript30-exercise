@@ -42,7 +42,25 @@
 
 <button></button>
 <script>
+  ; (function () {
 
+      const div = document.querySelectorAll('div');
+      const btn = document.querySelector('button');
+
+      div.forEach((item) => {
+        item.addEventListener('click', function (e) {
+          console.log(this.classList.value);
+          e.stopPropagation();
+          // e.stopPropagation() 可以阻止氣泡事件
+        }, {
+            capture: false,
+            // capture 可以設定是否為事件捕捉，true（事件捕捉）、false（事件氣泡，預設值）
+            once: false
+            // once 可以設定是否只觸發一次
+          });
+      });
+
+    })();
 </script>
 </body>
 </html>
