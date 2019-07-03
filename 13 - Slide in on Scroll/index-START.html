@@ -82,6 +82,18 @@
       })();
   </script>
 
+  <script>
+    // javascript 閉包的觀念
+    function foo(c) {
+      let a = c;
+      return function() {
+        console.log(a);
+      };
+    }
+    var baz = foo(2);
+    baz();
+  </script>
+
   <style>
     html {
       box-sizing: border-box;
