@@ -206,12 +206,10 @@
       let seconds = time;
 
       let hour = Math.floor(seconds / 3600);
-      seconds = seconds % 3600;
+      let mins = Math.floor((seconds % 3600) / 60);
+      let sec = seconds % 60;
 
-      let mins = Math.floor(seconds / 60);
-      seconds = seconds % 60;
-
-      let timeArray = [hour, mins, seconds];
+      let timeArray = [hour, mins, sec];
       console.log(timeArray);
 
     })();
